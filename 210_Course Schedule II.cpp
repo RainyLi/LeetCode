@@ -1,37 +1,48 @@
-class Solution {
-public:
-    vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
-        vector<set<int>> matrix(numCourses);
-        
-        for(auto p:prerequisites){
-            matrix[p.second].insert(p.first);
+#include <iostream>
+#include <vector>
+#include <numeric>
+#include <limits>
+
+using namespace std;
+
+
+int count(int num) {
+    vector<int> dp(2,0);
+    vector<int> prime;
+    int counter=0;
+    for(int i=2;i<num;i++){
+        double x=i;
+        for(auto p : prime){
+             int smallx=x/p;
+             if(smallx==x/p){
+                 dp.push_back(dp[smallx]+1);
+                 counter=counter+dp.back();
+                 break;
+             }
         }
-        
-        vector<int> inNum (numCourses, 0);
-        for(int i;i<numCourses;i++){
-            for(auto end:matrix[i]){
-                inNum[end]++;
-            }
+        if(dp.size()<i){
+            dp.push_back(1);
+            counter++;
+            prime.push_back(i);
         }
-        
-        vector<int> ans;
-        bool flag=true;
-        while(flag){
-            flag=false;
-            for(int i=0;i<numCourses;i++){
-                if(inNum[i]==0){
-                    flag=true;
-                    ans.push_back(i);
-                    for(auto end:matrix[i]){
-                        inNum[end]--;
-                    }
-                    inNum[i]=-1;
-                }
-            }
-        }
-        
-        if(ans.size()!=numCourses)
-            ans.clear();
-        return ans;
     }
-};
+
+    return counter;
+
+}
+
+int main() {
+    int res;
+
+    int _num;
+    cin >> _num;
+    cin.ignore (std::numeric_limits<std::streamsize>::max(), '\n');
+
+    res = count(_num);
+    cout << res << endl;
+
+    return 0;
+
+}
+
+
